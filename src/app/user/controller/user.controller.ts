@@ -1,7 +1,7 @@
 import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post} from '@nestjs/common';
 import {CreateUserDto} from "../dto/createUserDto";
 import {UserService} from "../service/user.service";
-import {UserInterface} from "../interface/userInterface";
+import {UserEntity} from "../entities/user.entity";
 
 @Controller('user')
 export class UserController {
@@ -9,13 +9,13 @@ export class UserController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserInterface> {
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     return await this.userService.createUser(createUserDto)
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(): Promise<UserInterface[]>{
+  async findAll(): Promise<UserEntity[]>{
     return await this.userService.getAll()
   }
 

@@ -1,34 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {CreateUserDto} from "../dto/createUserDto";
-import {UserInterface} from "../interface/userInterface";
+import {UserEntity} from "../entities/user.entity";
 import {hash} from "bcrypt";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
 
 @Injectable()
 export class UserService {
-  private users: UserInterface[] = [];
-
-  async createUser(createUserDto: CreateUserDto): Promise <UserInterface>{
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>
+  ) {}
+  async createUser(createUserDto: CreateUserDto): Promise <UserEntity>{
    createUserDto.password = await hash(createUserDto.password,10)
 
-    const user: UserInterface = {
-     ...createUserDto,
-      id: this.users.length + 1,
+    return this.userRepository.save({
+      ...createUserDto,
       password: createUserDto.password
-    }
-    this.users.push(user)
-    return user
+    })
   }
 
-  async getAll(): Promise<UserInterface[]>{
-    if(this.users.length === 0){
-      return [];
-    }
-    return this.users
+  async getAll(): Promise<UserEntity[]>{
+    return await this.userRepository.find();
   }
 
-  async getById(id: number): Promise<UserInterface|null>{
+  async getById(id: number): Promise<UserEntity|null>{
 
-    let user = this.users.find(user => user.id === id)
+    let user = this.userRepository.findOneByOrFail({id})
     console.log(user)
     return user || null;
   }
