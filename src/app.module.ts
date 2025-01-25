@@ -19,9 +19,9 @@ import * as process from "node:process";
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       synchronize: true,
-      logging: true,
-      entities: [`${__dirname}/**/*.entity{.ts,.js}`]
-
+      entities: [`${__dirname}/**/*.entity{.js,.ts}`],
+      migrations: [`${__dirname}/migrations/{.ts,*.js}`],
+      migrationsRun: true,
 
     }),
     UserModule],

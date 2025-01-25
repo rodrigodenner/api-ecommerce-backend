@@ -13,11 +13,12 @@ export class UserService {
   ) {}
   async createUser(createUserDto: CreateUserDto): Promise <UserEntity>{
    createUserDto.password = await hash(createUserDto.password,10)
-
-    return this.userRepository.save({
+    let newUser = this.userRepository.save({
       ...createUserDto,
+      type_user: 1,
       password: createUserDto.password
     })
+    return newUser;
   }
 
   async getAll(): Promise<UserEntity[]>{
@@ -27,7 +28,6 @@ export class UserService {
   async getById(id: number): Promise<UserEntity|null>{
 
     let user = this.userRepository.findOneByOrFail({id})
-    console.log(user)
     return user || null;
   }
 
