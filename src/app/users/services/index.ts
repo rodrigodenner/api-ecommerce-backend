@@ -1,2 +1,2 @@
-export {CreateUserService} from "./user.service"
-export {UserExistenceService} from
+export {CreateUserService} from "./create-user.service"
+export {UserExistenceService} from './user-existence.service'
