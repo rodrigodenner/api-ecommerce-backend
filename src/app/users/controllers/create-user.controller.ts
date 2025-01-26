@@ -1,16 +1,27 @@
-import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post} from '@nestjs/common';
+import {
+  Body,
+  ConflictException,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  InternalServerErrorException,
+  Post
+} from '@nestjs/common';
 import {CreateUserDto} from "../dto/createUserDto";
-import {UserService} from "../service/user.service";
-import {UserEntity} from "../entities/user.entity";
 
 @Controller('user')
 export class CreateUserController {
-  constructor(private readonly userService: UserService) {}
+  constructor() {}
 
-  @Post()
+  @Post('create-user')
   @HttpCode(HttpStatus.CREATED)
-  async create() {
-    return 
+  async handle(@Body() createUserDto: CreateUserDto) {
+    try {
+      this.createUserService.execute(createUserDto);
+    }catch (error) {
+      if (error instanceof ConflictException) throw error;
+      throw new InternalServerErrorException(error);
+    }
   }
 
 }
